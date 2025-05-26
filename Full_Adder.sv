@@ -1,39 +1,41 @@
-module full_adder (
-    input  logic a,
-    input  logic b,
-    input  logic cin,
-    output logic sum,
-    output logic cout
-);
-    assign sum  = a ^ b ^ cin;
-    assign cout = (a & b) | (b & cin) | (cin & a);
+// Code your testbench here
+// or browse Examples
+module f_adder(s,cout,a,b,cin);
+  input a,b,cin;
+  output s,cout;  
+ assign  s= (a ^ b ^ cin) ;
+assign cout=(a & b) | cin & (a ^ b);
 endmodule
 
+// Testbench
+module tb;
+  reg a,b,cin;
+  wire s,cout;
+  
+f_adder DUT (s,cout,a,b,cin);
 
-#testbench
-
-module tb_full_adder;
-    logic a, b, cin;
-    logic sum, cout;
-
-    // Instantiate the DUT (Device Under Test)
-    full_adder dut (
-        .a(a),
-        .b(b),
-        .cin(cin),
-        .sum(sum),
-        .cout(cout)
-    );
-
-    initial begin
-        $display("A B Cin | Sum Cout");
-        $display("-----------------");
-        // Test all input combinations
-        for (int i = 0; i < 8; i++) begin
-            {a, b, cin} = i[2:0];
-            #1; // Small delay for propagation
-            $display("%b %b  %b  |  %b   %b", a, b, cin, sum, cout);
+  initial 
+    begin
+      repeat(10)
+        begin
+          {a,b,cin} = $random;
+          #1;
+          $display("a=%d,b=%d.cin=%d , : , s = %d, cout = %d", a,b,cin,s,cout);
         end
-        $finish;
     end
 endmodule
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
