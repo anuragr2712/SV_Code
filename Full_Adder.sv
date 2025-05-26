@@ -1,58 +1,39 @@
-#Design
-
-module HalfAdder (
-    input  logic a, b,
-    output logic sum, carry
+module full_adder (
+    input  logic a,
+    input  logic b,
+    input  logic cin,
+    output logic sum,
+    output logic cout
 );
-
-    assign sum   = a ^ b;
-    assign carry = a & b;
-
+    assign sum  = a ^ b ^ cin;
+    assign cout = (a & b) | (b & cin) | (cin & a);
 endmodule
+
 
 #testbench
 
-module half_adder_tb;
-
-    // Declare testbench variables
-    logic a, b;
-    logic sum, carry;
+module tb_full_adder;
+    logic a, b, cin;
+    logic sum, cout;
 
     // Instantiate the DUT (Device Under Test)
-    HalfAdder dut (
+    full_adder dut (
         .a(a),
         .b(b),
+        .cin(cin),
         .sum(sum),
-        .carry(carry)
+        .cout(cout)
     );
 
-    // Apply stimulus
     initial begin
-        // Display header
-        $display(" a | b | sum | carry ");
-        $display("----------------------");
-
-        // Test case 1: a=0, b=0
-        a = 0; b = 0;
-        #10;
-        $display(" %b | %b |  %b  |   %b", a, b, sum, carry);
-
-        // Test case 2: a=0, b=1
-        a = 0; b = 1;
-        #10;
-        $display(" %b | %b |  %b  |   %b", a, b, sum, carry);
-
-        // Test case 3: a=1, b=0
-        a = 1; b = 0;
-        #10;
-        $display(" %b | %b |  %b  |   %b", a, b, sum, carry);
-
-        // Test case 4: a=1, b=1
-        a = 1; b = 1;
-        #10;
-        $display(" %b | %b |  %b  |   %b", a, b, sum, carry);
-
+        $display("A B Cin | Sum Cout");
+        $display("-----------------");
+        // Test all input combinations
+        for (int i = 0; i < 8; i++) begin
+            {a, b, cin} = i[2:0];
+            #1; // Small delay for propagation
+            $display("%b %b  %b  |  %b   %b", a, b, cin, sum, cout);
+        end
         $finish;
     end
-
 endmodule
