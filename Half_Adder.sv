@@ -1,58 +1,26 @@
-#Design
+module h_adder (s,c,a,b);
+input a,b;
+output s,c;
 
-module HalfAdder (
-    input  logic a, b,
-    output logic sum, carry
-);
-
-    assign sum   = a ^ b;
-    assign carry = a & b;
+xor G1 (s,a,b);
+and G2 (c,a,b);
 
 endmodule
 
-#testbench
+//Testbench 
 
-module half_adder_tb;
+module tb;
+reg a,b;
+wire s,c;
 
-    // Declare testbench variables
-    logic a, b;
-    logic sum, carry;
-
-    // Instantiate the DUT (Device Under Test)
-    HalfAdder dut (
-        .a(a),
-        .b(b),
-        .sum(sum),
-        .carry(carry)
-    );
-
-    // Apply stimulus
-    initial begin
-        // Display header
-        $display(" a | b | sum | carry ");
-        $display("----------------------");
-
-        // Test case 1: a=0, b=0
-        a = 0; b = 0;
-        #10;
-        $display(" %b | %b |  %b  |   %b", a, b, sum, carry);
-
-        // Test case 2: a=0, b=1
-        a = 0; b = 1;
-        #10;
-        $display(" %b | %b |  %b  |   %b", a, b, sum, carry);
-
-        // Test case 3: a=1, b=0
-        a = 1; b = 0;
-        #10;
-        $display(" %b | %b |  %b  |   %b", a, b, sum, carry);
-
-        // Test case 4: a=1, b=1
-        a = 1; b = 1;
-        #10;
-        $display(" %b | %b |  %b  |   %b", a, b, sum, carry);
-
-        $finish;
-    end
-
+h_adder DUT (s,c,a,b); //instantiation
+initial     
+    begin
+        repeat(10)
+            begin
+            {a,b} = $random;
+            #1;
+              $display("a=%d,b=%d, : s = %d",a,b,{c,s});
+            end
+    end 
 endmodule
